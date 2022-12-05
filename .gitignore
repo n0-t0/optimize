@@ -1,0 +1,8 @@
+/.ammonite
+/.bloop
+/.bsp
+/.metals
+/.vscode
+/build.sbt
+/project
+/target

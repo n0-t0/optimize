@@ -32,6 +32,7 @@ object Optimizer:
     val l1NormGen: Weight => Double = weight =>
         weight.map(scala.math.abs(_)).sum
 
+    // 中心差分による勾配
     val grad: (OptimizableFunction, Weight) => Weight = (target, weight) =>
             val h = 0.000001
             weight.zipWithIndex.map((w_i, i) => 
@@ -54,7 +55,7 @@ object SteepestDescentOptimizer extends Optimizer:
             optimize(target, nextVal, updateStrategy, stopCondition)
 
     // 更新規則
-    val centralDifference: UpdateStrategy =
+    val steepestDescent: UpdateStrategy =
         (target, weight) =>
             val lerningRate = 0.005
             println("grad: "+Optimizer.grad(target, weight))
@@ -67,7 +68,7 @@ def main(args: Array[String]): Unit = {
     val target: OptimizableFunction = vec => vec match {case Vector(x, y)=> x*x*x*x-4*x+3*x*x+4*x*x*x+6*y*y case _ => throw new RuntimeException}
     val firstVal: Weight = Vector(10.0, 0.0)
     
-    val optimizedWeight = SteepestDescentOptimizer.optimize(target, firstVal, SteepestDescentOptimizer.centralDifference, SteepestDescentOptimizer.simpleStopCondition)
+    val optimizedWeight = SteepestDescentOptimizer.optimize(target, firstVal, SteepestDescentOptimizer.steepestDescent, SteepestDescentOptimizer.simpleStopCondition)
     val optimizedTarget = target(optimizedWeight)
 
     println("Optimized Weight: " + optimizedWeight)
